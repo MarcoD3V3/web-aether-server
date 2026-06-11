@@ -1,0 +1,100 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=MedievalSharp&family=Nunito:wght@400;600;700;800&display=swap");
+
+@theme {
+  --font-display: "Cinzel", serif;
+  --font-fantasy: "MedievalSharp", cursive;
+  --font-body: "Nunito", system-ui, sans-serif;
+  --color-aether-void: #0a0c12;
+  --color-aether-deep: #12151f;
+  --color-aether-panel: #1a1f2e;
+  --color-aether-stone: #2a3144;
+  --color-aether-gold: #d4a84b;
+  --color-aether-gold-bright: #f0c96a;
+  --color-aether-emerald: #3ecf8e;
+  --color-aether-sky: #5eb3ff;
+  --color-aether-mist: #9eb4d4;
+  --color-aether-parchment: #e8dcc8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--color-aether-parchment);
+  background: var(--color-aether-void);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-fantasy {
+  font-family: var(--font-fantasy);
+}
+
+/* Fondo tipo ilustración Wynncraft (CSS, sin assets externos) */
+.aether-sky-bg {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -20%, #3a7bd5 0%, transparent 55%),
+    radial-gradient(ellipse 90% 60% at 80% 10%, #f0c96a33 0%, transparent 45%),
+    linear-gradient(180deg, #1a3a5c 0%, #2d5a3d 38%, #1e3d28 62%, #141820 100%);
+}
+
+.aether-parchment {
+  background: linear-gradient(165deg, #3d3528 0%, #2a241c 40%, #1f1a14 100%);
+  border: 2px solid #5c4d32;
+  box-shadow:
+    inset 0 1px 0 #8a7550,
+    inset 0 -2px 4px #0006,
+    0 8px 24px #0008;
+}
+
+.aether-stone-btn {
+  background: linear-gradient(180deg, #4a5568 0%, #2d3548 45%, #1e2433 100%);
+  border: 2px solid #6b7a94;
+  box-shadow:
+    inset 0 1px 0 #9aa8c0,
+    inset 0 -2px 0 #0d1018,
+    0 4px 0 #0a0c12;
+  text-shadow: 0 1px 2px #000;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.aether-stone-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.aether-stone-btn:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 2px 4px #0008,
+    0 1px 0 #0a0c12;
+}
+
+.aether-stone-btn--gold {
+  background: linear-gradient(180deg, #c9a03d 0%, #8a6420 50%, #5c4210 100%);
+  border-color: #f0d080;
+}
+
+.aether-stone-btn--emerald {
+  background: linear-gradient(180deg, #3ecf8e 0%, #1f9a5c 50%, #157a45 100%);
+  border-color: #7ef0b8;
+  color: #0a1a10;
+  text-shadow: none;
+}
+
+.aether-panel-frame {
+  border: 3px solid #4a3f2a;
+  background: linear-gradient(180deg, #2a241ccc 0%, #1a1610ee 100%);
+  box-shadow: 0 0 0 1px #8a7550 inset, 0 16px 48px #0009;
+}
