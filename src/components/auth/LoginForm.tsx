@@ -1,12 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState, type ClipboardEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { LogIn, Loader2 } from "lucide-react";
+import { parseProfileClipboard } from "@craftlauncher/shared";
 import { RpgButton } from "@/components/layout/RpgButton";
 import { SecurePasswordField } from "@/components/auth/SecurePasswordField";
 import { getWebDeviceCredentials } from "@/lib/device-auth";
 import { site } from "@/lib/site-config";
+
+function applyLoginClipboard(
+  text: string,
+  setUsername: (v: string) => void,
+  setPassword: (v: string) => void
+): string | null {
+  const parsed = parseProfileClipboard(text);
+  if (!parsed) return null;
+
+  const user = parsed.nombre?.trim();
+  const pass = parsed.contraseña?.trim();
+
+  if (user) setUsername(user);
+  if (pass) setPassword(pass);
+
+  if (user && pass) {
+    return `Credenciales importadas para @${user}. Pulsa Entrar.`;
+  }
+  if (user) {
+    return `Usuario @${user} importado. Escribe la contraseña si no venía en el bloque.`;
+  }
+  if (pass) {
+    return "Contraseña importada. Comprueba el usuario.";
+  }
+  return null;
+}
 
 export function LoginForm() {
   const router = useRouter();
@@ -14,10 +41,25 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pasteHint, setPasteHint] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleCredentialPaste = useCallback(
+    (e: ClipboardEvent<HTMLInputElement>) => {
+      const text = e.clipboardData.getData("text");
+      const hint = applyLoginClipboard(text, setUsername, setPassword);
+      if (!hint) return;
+
+      e.preventDefault();
+      setError(null);
+      setPasteHint(hint);
+    },
+    []
+  );
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
+    setPasteHint(null);
     setLoading(true);
 
     try {
@@ -56,6 +98,9 @@ export function LoginForm() {
       <p className="mt-2 text-center text-sm text-[#9eb4d4]">
         Usa la cuenta que te creó un admin en el panel de {site.launcherName}.
       </p>
+      <p className="mt-1 text-center text-xs text-[#6a7a94]">
+        Pega el bloque copiado del admin en usuario o contraseña — solo se usará lo necesario.
+      </p>
 
       <label className="mt-6 block text-sm font-semibold text-[#c8d8ec]">
         Usuario
@@ -63,7 +108,11 @@ export function LoginForm() {
           type="text"
           autoComplete="username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            setUsername(e.target.value);
+            setPasteHint(null);
+          }}
+          onPaste={handleCredentialPaste}
           required
           className="mt-1 w-full rounded-md border-2 border-[#4a3f2a] bg-[#1a1610] px-3 py-2.5 text-[#e8dcc8] outline-none focus:border-[#d4a84b]"
           placeholder="tu_usuario"
@@ -73,10 +122,20 @@ export function LoginForm() {
       <SecurePasswordField
         label="Contraseña"
         value={password}
-        onChange={setPassword}
+        onChange={(v) => {
+          setPassword(v);
+          setPasteHint(null);
+        }}
+        onPaste={handleCredentialPaste}
         autoComplete="current-password"
         className="mt-4"
       />
+
+      {pasteHint && (
+        <p className="mt-4 rounded-md border border-[#3ecf8e]/40 bg-[#3ecf8e]/10 px-3 py-2 text-sm text-[#3ecf8e]">
+          {pasteHint}
+        </p>
+      )}
 
       {error && (
         <p className="mt-4 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">

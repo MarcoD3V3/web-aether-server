@@ -17,6 +17,7 @@ type Props = {
   inputClassName?: string;
   /** Si true, hay que mantener pulsado el botón para ver (más seguro en pantallas compartidas). */
   holdToReveal?: boolean;
+  onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
 };
 
 export function SecurePasswordField({
@@ -29,6 +30,7 @@ export function SecurePasswordField({
   className,
   inputClassName,
   holdToReveal = false,
+  onPaste,
 }: Props) {
   const [visible, setVisible] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -91,6 +93,7 @@ export function SecurePasswordField({
           type={visible ? "text" : "password"}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onPaste={onPaste}
           placeholder={placeholder}
           autoComplete={autoComplete}
           spellCheck={false}
