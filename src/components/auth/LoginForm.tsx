@@ -3,7 +3,7 @@
 import { useCallback, useState, type ClipboardEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { LogIn, Loader2 } from "lucide-react";
-import { parseProfileClipboard } from "@craftlauncher/shared";
+import { parseProfileClipboard } from "@/lib/profile-clipboard";
 import { RpgButton } from "@/components/layout/RpgButton";
 import { SecurePasswordField } from "@/components/auth/SecurePasswordField";
 import { getWebDeviceCredentials } from "@/lib/device-auth";
